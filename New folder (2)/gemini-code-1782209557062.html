@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indumina | Tactical Focus Areas</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-base: #04070e;
+            --panel-bg: rgba(13, 19, 38, 0.7);
+            --primary: #00ff66; /* Cyber Green */
+            --secondary: #00e5ff; /* Neon Blue */
+            --alert: #ff2a5f; /* Threat Red */
+            --text-main: #e2e8f0;
+            --text-muted: #64748b;
+            --glass-border: rgba(0, 229, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Background Radar / Matrix Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.08;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(to bottom, rgba(4,7,14,1), transparent);
+        }
+
+        .back-btn {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--secondary);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+            background: rgba(0, 255, 102, 0.1);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 102, 0.3);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); }
+        }
+
+        /* Main Content Layout */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 5%;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+        }
+
+        /* Left Side: Briefing */
+        .briefing-panel {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .briefing-panel h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .briefing-panel p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .sys-req-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid var(--secondary);
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .sys-req-box span {
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* Right Side: Active Sectors */
+        .sectors-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sector-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .sector-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .sector-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+            box-shadow: 0 10px 40px rgba(0, 229, 255, 0.1);
+        }
+
+        .sector-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* Sector Header */
+        .sector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .sector-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sector-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        /* Blue Team / Red Team Color Modifiers */
+        .card-blue .sector-icon { color: var(--secondary); background: rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.2); }
+        .card-blue:hover { border-color: var(--secondary); }
+        .card-blue::before { background: linear-gradient(90deg, transparent, var(--secondary), transparent); }
+
+        .card-red .sector-icon { color: var(--alert); background: rgba(255, 42, 95, 0.1); border-color: rgba(255, 42, 95, 0.2); }
+        .card-red:hover { border-color: var(--alert); box-shadow: 0 10px 40px rgba(255, 42, 95, 0.1); }
+        .card-red::before { background: linear-gradient(90deg, transparent, var(--alert), transparent); }
+
+        .card-green .sector-icon { color: var(--primary); background: rgba(0, 255, 102, 0.1); border-color: rgba(0, 255, 102, 0.2); }
+        .card-green:hover { border-color: var(--primary); box-shadow: 0 10px 40px rgba(0, 255, 102, 0.1); }
+        .card-green::before { background: linear-gradient(90deg, transparent, var(--primary), transparent); }
+
+        .sector-title h2 { font-size: 1.4rem; font-weight: 600; }
+        .sector-id { font-family: 'Fira Code', monospace; color: var(--text-muted); font-size: 0.8rem; }
+
+        /* Description & Tags */
+        .sector-desc {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Proficiency Progress Bar */
+        .progress-container {
+            width: 100%;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            width: 0; /* Animated via JS */
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .card-blue .progress-fill { background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+        .card-red .progress-fill { background: var(--alert); box-shadow: 0 0 10px var(--alert); }
+        .card-green .progress-fill { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+            .briefing-panel { position: relative; top: 0; margin-bottom: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cyber Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Action Bar -->
+    <nav class="top-nav">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> RETURN_TO_BASE</a>
+        <div class="status-indicator">
+            <div class="pulse-dot"></div>
+            MONITORING ACTIVE
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+        
+        <!-- Briefing Panel (Left) -->
+        <aside class="briefing-panel">
+            <h1>Tactical<br>Operations.</h1>
+            <p>A live breakdown of my current operational vectors. As a first-year engineer, I am systematically dividing my time between understanding offensive mechanisms and engineering robust defensive structures.</p>
+            
+            <div class="sys-req-box">
+                <span>> TARGET_ACQUISITION</span>
+                [+] Mapping Network Topologies<br>
+                [+] Log Parsing Automation<br>
+                [+] Sandbox Penetration Testing<br>
+                <br>
+                <span style="color: var(--text-muted);">Awaiting next protocol...</span>
+            </div>
+        </aside>
+
+        <!-- Sectors Grid (Right) -->
+        <div class="sectors-grid">
+
+            <!-- Sector 1: Blue Team -->
+            <div class="sector-card card-blue">
+                <div class="sector-header">
+                    <div class="sector-title">
+                        <div class="sector-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h2>Defensive Security</h2>
+                            <div class="sector-id">OP_CODE: BLUE_TEAM</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="sector-desc">Building the perimeter. Focusing on traffic analysis, intrusion detection configurations, and identifying anomalies within standard network behaviors before they escalate.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Wireshark</span>
+                    <span class="tech-tag">Splunk Basics</span>
+                    <span class="tech-tag">Log Analysis</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label"><span>Vector Progression</span> <span>65%</span></div>
+                    <div class="progress-track">
+                        <div class="progress-fill" data-target="65%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector 2: Red Team -->
+            <div class="sector-card card-red">
+                <div class="sector-header">
+                    <div class="sector-title">
+                        <div class="sector-icon"><i class="fa-solid fa-crosshairs"></i></div>
+                        <div>
+                            <h2>Ethical Hacking</h2>
+                            <div class="sector-id">OP_CODE: RED_TEAM</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="sector-desc">Understanding the adversary. Utilizing curated environments to learn exploitation techniques, vulnerability scanning, and the attacker mindset to better defend infrastructures.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Nmap</span>
+                    <span class="tech-tag">Metasploit (Intro)</span>
+                    <span class="tech-tag">TryHackMe</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label"><span>Vector Progression</span> <span>45%</span></div>
+                    <div class="progress-track">
+                        <div class="progress-fill" data-target="45%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sector 3: Infrastructure -->
+            <div class="sector-card card-green">
+                <div class="sector-header">
+                    <div class="sector-title">
+                        <div class="sector-icon"><i class="fa-solid fa-terminal"></i></div>
+                        <div>
+                            <h2>OS & Scripting</h2>
+                            <div class="sector-id">OP_CODE: INFRASTRUCTURE</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="sector-desc">The foundation of operations. Mastering command-line interfaces, Linux system administration, and Python/Bash scripting to automate repetitive security tasks.</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Linux (Debian/Kali)</span>
+                    <span class="tech-tag">Bash Scripting</span>
+                    <span class="tech-tag">Python</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label"><span>Vector Progression</span> <span>80%</span></div>
+                    <div class="progress-track">
+                        <div class="progress-fill" data-target="80%"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        // Progress Bar Animation Logic
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const fills = document.querySelectorAll('.progress-fill');
+                fills.forEach(fill => {
+                    fill.style.width = fill.getAttribute('data-target');
+                });
+            }, 300); // Slight delay for smooth visual effect on load
+        });
+
+        // Simplified Background Matrix (For aesthetic continuity)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(4, 7, 14, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 229, 255, 0.3)'; // Using the secondary blue color for this page
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+    </script>
+</body>
+</html>
