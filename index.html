@@ -159,6 +159,12 @@
         .hero-image-container::after { bottom: -10px; right: -10px; border-left: 0; border-top: 0; }
 
         /* --- BUTTONS --- */
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
         .btn {
             display: inline-block;
             padding: 0.8rem 2rem;
@@ -178,6 +184,19 @@
 
         .btn-primary:hover {
             background: rgba(0, 255, 102, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+            color: var(--bg-color);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: transparent;
+            color: var(--primary);
             box-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
             transform: translateY(-2px);
         }
@@ -436,6 +455,7 @@
                 gap: 3rem;
                 padding: 120px 5% 50px 5%;
             }
+            .hero-buttons { justify-content: center; }
             .hero-content h1 { font-size: 2.5rem; }
             .hero-image-container { width: 280px; height: 280px; }
             .section { padding: 60px 5%; }
@@ -464,7 +484,12 @@
             <span class="terminal-text">indumina@security-onion:~$ website-init</span>
             <h1>Securing the Digital Frontier.</h1>
             <p>Hi, I am Indumina. I am an aspiring Cybersecurity Engineer currently in my first year of journeying into the depths of network defense, ethical hacking, and threat intelligence.</p>
-            <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-terminal"></i> Connect via Terminal</a>
+            
+            <div class="hero-buttons">
+                <a href="#contact" class="btn btn-primary"><i class="fa-solid fa-terminal"></i> Connect via Terminal</a>
+                <!-- NEW DOWNLOAD CV BUTTON -->
+                <a href="indumina_cv.pdf" download="Indumina_CV.pdf" class="btn btn-secondary"><i class="fa-solid fa-download"></i> Download CV</a>
+            </div>
         </div>
         
         <div class="hero-image-container">
