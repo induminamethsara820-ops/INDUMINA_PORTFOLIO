@@ -59,7 +59,7 @@
             width: 100%;
             max-width: 1920px; /* TV Optimization */
             margin: 0 auto;
-            background: rgba(10, 15, 29, 0.8);
+            background: rgba(10, 15, 29, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 100;
@@ -75,6 +75,11 @@
             font-size: 1.4rem;
             color: var(--primary);
             text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
         }
 
         .nav-links a {
@@ -112,7 +117,7 @@
             color: var(--primary);
             margin-bottom: 1rem;
             display: block;
-            word-wrap: break-word; /* Prevent overflow */
+            word-wrap: break-word;
         }
 
         .hero-content h1 {
@@ -255,7 +260,7 @@
             font-family: 'Fira Code', monospace;
             box-shadow: 0 15px 40px rgba(0, 255, 102, 0.05);
             position: relative;
-            overflow-wrap: break-word; /* Crucial for small mobile */
+            overflow-wrap: break-word;
             word-break: break-word;
         }
 
@@ -483,19 +488,34 @@
         }
 
         @media (max-width: 768px) {
-            nav { padding: 1.2rem 5%; }
-            .nav-links { display: none; }
+            nav { 
+                padding: 0.8rem 4%; 
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .nav-links { 
+                display: flex; 
+                gap: 1rem;
+                font-size: 0.85rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                margin-left: 0; 
+            }
+
             .hero {
                 flex-direction: column-reverse;
                 text-align: center;
                 justify-content: center;
                 gap: 3rem;
-                padding: 120px 5% 50px 5%;
+                padding: 150px 5% 50px 5%;
             }
             .hero-buttons { justify-content: center; }
             .section { padding: 60px 5%; }
             
-            /* Ensures Grid drops gracefully on small mobiles */
             .grid { grid-template-columns: 1fr; }
             .skills-grid { grid-template-columns: 1fr; }
         }
@@ -510,10 +530,10 @@
     <nav>
         <a href="#" class="logo">&lt; INDUMINA.SEC /&gt;</a>
         <div class="nav-links">
-            <a href="about.html">About</a>
-            <a href="focus.html">Focus Areas</a>
-            <a href="Skill.html">Skills</a>
-            <a href="contact.html">Contact</a>
+            <a href="#about">About</a>
+            <a href="#focus">Focus Areas</a>
+            <a href="#skills">Skills</a>
+            <a href="#contact">Contact</a>
         </div>
     </nav>
 
@@ -653,7 +673,6 @@
             rainDrops[x] = 1;
         }
         
-        // Ensure raindrops resize correctly if user flips phone orientation
         window.addEventListener('resize', () => {
             columns = Math.floor(canvas.width / fontSize);
             rainDrops = [];
