@@ -31,6 +31,12 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             overflow-x: hidden;
+            width: 100%;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
         }
 
         /* --- BACKGROUND RUNNING MATRIX CODE --- */
@@ -48,7 +54,11 @@
         nav {
             position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             width: 100%;
+            max-width: 1920px; /* TV Optimization */
+            margin: 0 auto;
             background: rgba(10, 15, 29, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -88,10 +98,13 @@
             justify-content: space-between;
             padding: 0 10%;
             padding-top: 80px;
+            max-width: 1920px; /* TV Optimization */
+            margin: 0 auto;
         }
 
         .hero-content {
             max-width: 600px;
+            width: 100%;
         }
 
         .terminal-text {
@@ -99,10 +112,11 @@
             color: var(--primary);
             margin-bottom: 1rem;
             display: block;
+            word-wrap: break-word; /* Prevent overflow */
         }
 
         .hero-content h1 {
-            font-size: 3.5rem;
+            font-size: clamp(2.2rem, 5vw, 3.5rem); /* Fluid typography */
             font-weight: 800;
             line-height: 1.2;
             margin-bottom: 1.5rem;
@@ -120,8 +134,9 @@
 
         .hero-image-container {
             position: relative;
-            width: 350px;
-            height: 350px;
+            width: min(100%, 350px); /* Responsive sizing without cropping */
+            aspect-ratio: 1;
+            margin: 0 auto;
         }
 
         .hero-image-wrapper {
@@ -173,6 +188,7 @@
             font-family: 'Fira Code', monospace;
             font-weight: 500;
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .btn-primary {
@@ -201,18 +217,22 @@
             transform: translateY(-2px);
         }
 
-        /* --- ULTRA CREATIVE ABOUT SECTION (NEW UI/UX) --- */
+        /* --- ULTRA CREATIVE ABOUT SECTION --- */
         .section {
             padding: 100px 10%;
+            max-width: 1920px; /* TV Optimization */
+            margin: 0 auto;
+            width: 100%;
         }
 
         .section-title {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             margin-bottom: 3rem;
             font-family: 'Fira Code', monospace;
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .section-title span {
@@ -224,6 +244,7 @@
             grid-template-columns: 1.1fr 0.9fr;
             gap: 4rem;
             align-items: center;
+            width: 100%;
         }
 
         .about-terminal {
@@ -234,6 +255,8 @@
             font-family: 'Fira Code', monospace;
             box-shadow: 0 15px 40px rgba(0, 255, 102, 0.05);
             position: relative;
+            overflow-wrap: break-word; /* Crucial for small mobile */
+            word-break: break-word;
         }
 
         .terminal-header {
@@ -243,12 +266,14 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
 
         .terminal-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            flex-shrink: 0;
         }
         .dot-r { background: #ff5f56; }
         .dot-y { background: #ffbd2e; }
@@ -297,6 +322,8 @@
             font-size: 0.8rem;
             color: var(--secondary);
             font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
         }
 
         .hologram-frame {
@@ -349,11 +376,12 @@
             100% { opacity: 0.7; box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); }
         }
 
-        /* --- SKILLS & FOCUS FOCUS SPACES --- */
+        /* --- SKILLS & FOCUS SPACES --- */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
+            width: 100%;
         }
 
         .card {
@@ -364,6 +392,7 @@
             backdrop-filter: blur(8px);
             transition: all 0.3s ease;
             position: relative;
+            height: 100%;
         }
 
         .card:hover {
@@ -393,6 +422,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
+            width: 100%;
         }
 
         .skill-badge {
@@ -404,10 +434,12 @@
             align-items: center;
             gap: 12px;
             font-family: 'Fira Code', monospace;
+            word-wrap: break-word;
         }
 
         .skill-badge i {
             color: var(--primary);
+            flex-shrink: 0;
         }
 
         /* --- FOOTER --- */
@@ -416,16 +448,21 @@
             padding: 3rem 10%;
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            max-width: 1920px;
+            margin: 0 auto;
         }
 
         .social-icons {
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .social-icons a {
             color: var(--text-muted);
             font-size: 1.5rem;
-            margin: 0 1rem;
             transition: color 0.3s;
         }
 
@@ -442,7 +479,7 @@
         /* --- RESPONSIVE LAYOUTS --- */
         @media (max-width: 992px) {
             .about-container { grid-template-columns: 1fr; gap: 3rem; }
-            .hologram-frame { max-width: 300px; }
+            .hologram-frame { max-width: min(100%, 380px); }
         }
 
         @media (max-width: 768px) {
@@ -456,9 +493,11 @@
                 padding: 120px 5% 50px 5%;
             }
             .hero-buttons { justify-content: center; }
-            .hero-content h1 { font-size: 2.5rem; }
-            .hero-image-container { width: 280px; height: 280px; }
             .section { padding: 60px 5%; }
+            
+            /* Ensures Grid drops gracefully on small mobiles */
+            .grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -522,11 +561,11 @@
                     
                     <div class="cyber-timeline">
                         <div class="timeline-item">
-                            <div class="timeline-time">PHASE 01 — THE SPARK</div>
+                            <span class="timeline-time">PHASE 01 — THE SPARK</span>
                             <p style="color: var(--text-main); margin: 2px 0;">Fascinated by network architectures, operating system vulnerabilities, and operational cryptography logic.</p>
                         </div>
                         <div class="timeline-item">
-                            <div class="timeline-time">PHASE 02 — CURRENT VECTOR</div>
+                            <span class="timeline-time">PHASE 02 — CURRENT VECTOR</span>
                             <p style="color: var(--text-main); margin: 2px 0;">Acquiring structural defensive configurations, managing safe virtual sandboxes, and tackling capture-the-flag (CTF) environments.</p>
                         </div>
                     </div>
@@ -607,12 +646,21 @@
 
         const alphabet = "01010101010101010101ABCDEFUX#@$%";
         const fontSize = 16;
-        const columns = canvas.width / fontSize;
+        let columns = Math.floor(canvas.width / fontSize);
 
-        const rainDrops = [];
+        let rainDrops = [];
         for (let x = 0; x < columns; x++) {
             rainDrops[x] = 1;
         }
+        
+        // Ensure raindrops resize correctly if user flips phone orientation
+        window.addEventListener('resize', () => {
+            columns = Math.floor(canvas.width / fontSize);
+            rainDrops = [];
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+        });
 
         function drawMatrix() {
             ctx.fillStyle = 'rgba(10, 15, 29, 0.05)';
